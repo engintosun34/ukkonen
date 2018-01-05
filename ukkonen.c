@@ -31,10 +31,10 @@ size_t ukkonen(char *instr, size_t instrlen, size_t UNQ_CHARS){//instrlen exclud
   
   node *prevNewNode = NULL;
   
-  for(size_t END = 1; END < instrlen; END++){
+  for(size_t END = 1; END <= instrlen; END++){
+    currSuffix_loop://loops until currSuffix==END or currChar matches
     assert(currSuffix + ap->depth + 1 == END);
     char currChar = instr[END-1];
-    currSuffix_loop://loops until currSuffix==END or currChar matches
     //first decide if ap is at a node or on a branch, then check if currChar matches
     if(ap->edge==NULL?
       (ap->node->edges)[char2index(currChar,UNQ_CHARS)]==NULL :
@@ -51,30 +51,34 @@ size_t ukkonen(char *instr, size_t instrlen, size_t UNQ_CHARS){//instrlen exclud
         //ap will be at the node, so we don't have to do anything
       }else{
         assert(ap->depth > ap->node->nodeDepth);//ap must go deeper than the node
-        hop_loop:
+        
+        hop_loop://terminates when ap is at the deepest node b4 traversing edge
         //calculate which branch to go
         char nextchar = instr[ap->node->nodeDepth+currSuffix];
         ap->edge = ap->node->edges[char2index(nextchar,UNQ_CHARS)];
         size_t depthToGo = ap->depth - ap->node->nodeDepth;
-        
         assert(ap->edge!=NULL);//this because depthToGo > 0
+        //do we need to hop over this guy?
         if(ap->edge->leaf==NULL?
           depthToGo > END - ap->edge->start:
           depthToGo > ap->edge->end - ap->edge->start){
-          
+          ap->node = ap->edge->leaf;
+          ap->edge = NULL;
+          goto hop_loop;
         }
+        //we have arrived at the deepest node by node hopping
+        assert(depthToGo + ap->node->nodeDepth == ap->depth);
       }
       //activePoint is now positioned where it needs to be
       //  so that currChar is the next to be considered
       if(currSuffix<END) goto currSuffix_loop;
       prevNewNode = NULL;//because it is root
-      //(assert currSuffix==END && activePoint is root && prevNode is NULL)
+      assert( currSuffix==END && ap->node == root && prevNode == NULL);
     }else{
       //advance activePoint along matching char
     }
-    
   }
-  //assert END == instrlen
+  assert( currSuffix == END && END == instrlen + 1);
   //we now need to add the dollar sign
   //then sum up the substrings, and subtract one to exclude the empty string
   
