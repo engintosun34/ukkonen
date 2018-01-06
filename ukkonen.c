@@ -4,12 +4,12 @@
  * and open the template in the editor.
  */
 #include "ukkonen.h"
-#include <assert.h>
 //#define NDEBUG //if included, removes assert statements
+#include "debug.h"
 #include <stdlib.h>
 
 size_t char2rank(char c, size_t UNQ_CHARS){
-  return c;//TODO this needs to be adapted so that everything fits in UNQ_CHARS
+  return c-97;//TODO this needs to be adapted so that everything fits in UNQ_CHARS
 };
 
 node *ukkonen_implicit(const char *instr, const size_t instrlen, const size_t UNQ_CHARS){
@@ -30,7 +30,7 @@ node *ukkonen_implicit(const char *instr, const size_t instrlen, const size_t UN
 #define DEFAULT_EDGE_END instrlen
   
   for(size_t END = 1; END <= instrlen; END++){
-    currSuffix_loop://loops until currSuffix==END or currChar matches
+    currSuffix_loop: ;//loops until currSuffix==END or currChar matches
     assert(currSuffix + ap->depth == END-1);
     char currChar = instr[END-1];
     size_t currCharRank = char2rank(currChar,UNQ_CHARS);
@@ -69,13 +69,13 @@ node *ukkonen_implicit(const char *instr, const size_t instrlen, const size_t UN
             assert(prevNode!=root);
             prevNode->link=newNode;
           }
-          prevNode = ap->node;
+          prevNode = (ap->node == root? NULL: ap->node);
         }
         ////////DONE INSERTING
         currSuffix++;
         ap->node = ap->node->link;
         if(ap->node==NULL)ap->node=root;
-        ap->depth--;
+        ap->depth > 0? ap->depth--: 0;//this has a problem is ap->depth was 0
         //calculate where this depth is
         if(ap->depth==ap->node->nodeDepth){
           //ap will be at the node, so we don't have to do anything
@@ -101,8 +101,8 @@ node *ukkonen_implicit(const char *instr, const size_t instrlen, const size_t UN
         //activePoint is now positioned where it needs to be
         //  so that currChar is the next to be considered
         if(currSuffix<END) goto currSuffix_loop;
-        assert(prevNode==root);
-        prevNode = NULL;//because it is root
+        assert(prevNode==NULL || prevNode==root);
+        prevNode = NULL;
         assert( currSuffix==END && ap->node == root && prevNode == NULL);
     }else{
       //advance activePoint along matching char
@@ -124,7 +124,7 @@ node *ukkonen_implicit(const char *instr, const size_t instrlen, const size_t UN
     }
     //assert root is now an implicit suffix tree up to currChar
   }
-  assert( currSuffix == instrlen );
+  //assert root is now an implicit suffix tree of instr
   free(ap);
   //do we have any cleaning up to do?
   return root;
@@ -151,7 +151,7 @@ size_t substrings_ukkonen_implicit(const char *instr, const size_t instrlen, con
   size_t substrings = 0;
   
   for(size_t END = 1; END <= instrlen; END++){
-    currSuffix_loop://loops until currSuffix==END or currChar matches
+    currSuffix_loop: ;//loops until currSuffix==END or currChar matches
     assert(currSuffix + ap->depth == END-1);
     char currChar = instr[END-1];
     size_t currCharRank = char2rank(currChar,UNQ_CHARS);
@@ -191,13 +191,13 @@ size_t substrings_ukkonen_implicit(const char *instr, const size_t instrlen, con
             assert(prevNode!=root);
             prevNode->link=newNode;
           }
-          prevNode = ap->node;
+          prevNode = (ap->node == root? NULL: ap->node);
         }
         ////////DONE INSERTING
         currSuffix++;
         ap->node = ap->node->link;
         if(ap->node==NULL)ap->node=root;
-        ap->depth--;
+        ap->depth > 0? ap->depth--: 0;//this has a problem is ap->depth was 0
         //calculate where this depth is
         if(ap->depth==ap->node->nodeDepth){
           //ap will be at the node, so we don't have to do anything
@@ -223,8 +223,8 @@ size_t substrings_ukkonen_implicit(const char *instr, const size_t instrlen, con
         //activePoint is now positioned where it needs to be
         //  so that currChar is the next to be considered
         if(currSuffix<END) goto currSuffix_loop;
-        assert(prevNode==root);
-        prevNode = NULL;//because it is root
+        assert(prevNode==NULL || prevNode==root);
+        prevNode = NULL;
         assert( currSuffix==END && ap->node == root && prevNode == NULL);
     }else{
       //advance activePoint along matching char
@@ -246,7 +246,7 @@ size_t substrings_ukkonen_implicit(const char *instr, const size_t instrlen, con
     }
     //assert root is now an implicit suffix tree up to currChar
   }
-  assert( currSuffix == instrlen );
+  //assert root is now an implicit suffix tree of instr
   free(ap);
   //free the tree
   //do we have any cleaning up to do?
