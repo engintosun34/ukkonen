@@ -18,6 +18,7 @@
 extern "C" {
 #endif
   
+#include <stdlib.h>
   //const size_t NUM_CHARS;
   
   typedef struct edge_header edge;
@@ -47,6 +48,7 @@ extern "C" {
   };
   
   size_t ukkonen(char *instr, size_t instrlen, size_t UNQ_CHARS);//instrlen excludes terminating char
+  size_t substrings_ukkonen_implicit(const char *instr, const size_t instrlen, const size_t UNQ_CHARS);
   /*
 High-level description of Ukkonen's algorithm:
 We are basically inserting suffixes into the tree from longest to shortest.
