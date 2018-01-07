@@ -37,7 +37,7 @@ extern "C" {
     node *link; //points to node that has same address, except for the first char
                 //defaults to NULL, which means go to root after branching from here
     size_t nodeDepth;
-    size_t numsubsbelow;
+    int mark;//1 or 0
   };
   
   struct point_header{
@@ -47,7 +47,6 @@ extern "C" {
       //depth - node->nodeDepth will be the edge depth
   };
   
-  size_t ukkonen(char *instr, size_t instrlen, size_t UNQ_CHARS);//instrlen excludes terminating char
   size_t substrings_ukkonen_implicit(const char *instr, const size_t instrlen, const size_t UNQ_CHARS);
   /*
 High-level description of Ukkonen's algorithm:
