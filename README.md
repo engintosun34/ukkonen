@@ -3,9 +3,6 @@ personal implementation of ukkonen's suffix tree algorithm, with helpful comment
 
 This implementation made specifically for the hackerrank challenge https://www.hackerrank.com/challenges/how-many-substrings/problem
 
-## TODO
-need to implement support for custom char2rank function
-
 ## Example
 
 
@@ -14,3 +11,7 @@ need to implement support for custom char2rank function
         char *test = "foo";
         return substrings_ukkonen_implicit(test, 3, 26);
     }
+
+
+## TODO
+need to implement support for custom char2rank function
