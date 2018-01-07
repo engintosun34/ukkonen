@@ -9,7 +9,8 @@ This implementation made specifically for the hackerrank challenge https://www.h
     #include "ukkonen.h"
     int main(){
         char *test = "foo";
-        return substrings_ukkonen_implicit(test, 3, 26);
+        printf("num of substrings in %s\n%zu",test,substrings_ukkonen_implicit(test, 3, 26));
+        return 0;
     }
 
 
