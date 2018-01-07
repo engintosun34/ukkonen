@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-//#define NDEBUG1
+#define NDEBUG1
 #include "debug.h"
 #include "ukkonen.h"
 #include <stdlib.h>
