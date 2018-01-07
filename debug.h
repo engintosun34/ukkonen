@@ -19,6 +19,7 @@ extern "C" {
 #endif
 
 #include <assert.h>
+#include <stdio.h>
 #ifndef NDEBUG1
 #define DEBUG_PRINT(x) printf x
 #define DEBUG_FUNC_CALL(x) x
@@ -26,7 +27,6 @@ extern "C" {
 #define DEBUG_PRINT(x) (void)0
 #define DEBUG_FUNC_CALL(x) (void)0
 #endif
-#include <stdio.h>
 
 #ifdef __cplusplus
 }

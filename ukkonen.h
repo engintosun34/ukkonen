@@ -34,7 +34,7 @@ extern "C" {
   
   struct node_header{
     edge **edges;//static array of NUM_CHARS children; NULL if does not have edge at a char
-    node *link; //points to node that has same address, except for the first char
+    node *link; //points to last known node that has same initial address, except for the first char
                 //defaults to NULL, which means go to root after branching from here
     size_t nodeDepth;
     int mark;//1 or 0
